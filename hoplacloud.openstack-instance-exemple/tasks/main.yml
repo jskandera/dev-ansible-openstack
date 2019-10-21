@@ -1,0 +1,28 @@
+---
+# tasks file for hoplacloud.openstack-instance-exemple
+
+- name: Create instance-1 and attaches to a network
+  os_server:
+       state: present #Should the resource be present or absent.
+       name: "Instance-1" #Name that has to be given to the instance.
+       image: CentOS-7-x86_64 #Name or id of the base image to boot.
+       key_name: "Cle-1" #The key pair name to be used when creating a instance.
+       flavor: std.h.2 #The name or id of the flavor in which the new instance has to be created.
+       security_groups: "hopla_default" #Names of the security groups to which the instance should be added.
+       nics: #A list of networks to which the instance's interface should be attached.
+         - net-name: "fr-east-1-public"
+
+- name: Stop instance-1
+  os_server_action:
+      action: stop
+      server: "Instance-1"
+
+- name: start instance-1
+  os_server_action:
+      action: start
+      server: "Instance-1"
+
+- name: Delete instance-1
+  os_server:
+       state: absent
+       name: "Instance-1"
