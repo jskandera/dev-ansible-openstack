@@ -2,4 +2,4 @@
 - hosts: localhost
   remote_user: root
   roles:
-    - hoplacloud.instance
+    - hoplacloud.openstack_instance_exemple
