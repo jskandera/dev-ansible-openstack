@@ -26,9 +26,7 @@
     dns_nameservers:
        - 8.8.8.8
        - 8.8.4.4
-    host_routes:
-       - destination: 0.0.0.0/0
-         nexthop: 10.15.30.254
+    gateway_ip: "10.15.30.254"
   when: lan_present == true
 
 - name: Create security group "WL-infogerance-hopla"
