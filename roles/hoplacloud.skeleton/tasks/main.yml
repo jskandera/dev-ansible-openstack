@@ -52,13 +52,13 @@
   os_security_group:
     auth: "{{ os_auth }}"
     name: "WL-infogerance-hopla"
-    description: Whitelist des IP utilisées par hopla dans le cadre de votre contrat d'infogérance.
+    description: Whitelist des IP utilisees par hopla dans le cadre de votre contrat d'infogerance.
 
 - name: Create security group "WL-Lan-1"
   os_security_group:
     auth: "{{ os_auth }}"
     name: "WL-Lan-1"
-    description: Lan-1 acces
+    description: Lan-1
   when: (lan1|bool == true)
 
 - name: Create security group "WL-Lan-2"
@@ -201,7 +201,7 @@
     name: "VR1"
     network: "fr-east-1-public"
     interfaces:
-      - subnet: "Lan-1"
+      - "Lan-1"
   when: (lan1|bool == true) and (router == "vr") and (lan2|bool == false)
 
 - name: Create VR for Lan1 and Lan2
@@ -210,6 +210,6 @@
     name: "VR1"
     network: "fr-east-1-public"
     interfaces:
-      - subnet: "Lan-1"
-      - subnet: "Lan-2"
+      - "Lan-1"
+      - "Lan-2"
   when: (lan1|bool == true) and (router == "vr") and (lan2|bool == true)
