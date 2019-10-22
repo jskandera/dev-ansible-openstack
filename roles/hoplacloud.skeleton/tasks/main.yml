@@ -10,14 +10,21 @@
       project_domain_name: "default"
       user_domain_name: "default"
 
-- name: Create network
+- name: Create network 1
   os_network:
     auth: "{{ os_auth }}"
-    name: "Lan"
+    name: "Lan1"
     port_security_enabled: yes
-  when: lan_present|bool == true
+  when: (lan1|bool == true)
 
-- name: Create subnet
+- name: Create network 2
+  os_network:
+    auth: "{{ os_auth }}"
+    name: "Lan2"
+    port_security_enabled: yes
+  when: (lan2|bool == true)
+
+- name: Create subnet 1
   os_subnet:
     auth: "{{ os_auth }}"
     network_name: "Lan"
@@ -27,7 +34,19 @@
        - 8.8.8.8
        - 8.8.4.4
     gateway_ip: "10.15.30.254"
-  when: lan_present|bool == true
+  when: (lan1|bool == true)
+
+- name: Create subnet 2
+  os_subnet:
+    auth: "{{ os_auth }}"
+    network_name: "Lan"
+    name: "Lan-2"
+    cidr: 10.15.31.0/24
+    dns_nameservers:
+       - 8.8.8.8
+       - 8.8.4.4
+    gateway_ip: "10.15.31.254"
+  when: (lan2|bool == true)
 
 - name: Create security group "WL-infogerance-hopla"
   os_security_group:
@@ -40,7 +59,14 @@
     auth: "{{ os_auth }}"
     name: "WL-Lan-1"
     description: Lan-1 acces
-  when: lan_present|bool == true
+  when: (lan1|bool == true)
+
+- name: Create security group "WL-Lan-2"
+  os_security_group:
+    auth: "{{ os_auth }}"
+    name: "WL-Lan-2"
+    description: Lan-1 acces
+  when: (lan2|bool == true)
 
 - name: Create security group "WL-{{ username }}"
   os_security_group:
@@ -73,7 +99,15 @@
     auth: "{{ os_auth }}"
     security_group: "WL-Lan-1"
     remote_ip_prefix: 10.15.30.0/24
-  when: lan_present|bool == true
+  when: (lan1|bool == true)
+  ignore_errors: true
+
+- name: Create security group rule in "WL-Lan-2"
+  os_security_group_rule:
+    auth: "{{ os_auth }}"
+    security_group: "WL-Lan-2"
+    remote_ip_prefix: 10.15.31.0/24
+  when: (lan2|bool == true)
   ignore_errors: true
 
 - name: Create security group rule in "WL-infogerance-hopla" IPv4
@@ -100,17 +134,27 @@
     public_key: "{{ public_key }}"
   when: (public_key is defined) and (public_key |length > 4)
 
-- name: Create a port (router lan interface)
+- name: Create a port (router lan1 interface)
   os_port:
        auth: "{{ os_auth }}"
-       name: "R1-lan-1"
-       network: "Lan"
+       name: "gw-lan-1"
+       network: "Lan1"
        security_groups: "WL-Lan-1"
        fixed_ips:
          - ip_address: 10.15.30.254
-  when: lan_present|bool == true
+  when: (lan1|bool == true) and (router != false)
 
-- name: Create RouterOS instance
+- name: Create a port (router lan2 interface)
+  os_port:
+       auth: "{{ os_auth }}"
+       name: "gw-lan-2"
+       network: "Lan2"
+       security_groups: "WL-Lan-2"
+       fixed_ips:
+         - ip_address: 10.15.31.254
+  when: (lan2|bool == true) and (router != false)
+
+- name: Create RouterOS instance Lan1 only
   os_server:
        auth: "{{ os_auth }}"
        name: "R1"
@@ -120,7 +164,7 @@
        flavor: std.1
        nics:
          - net-name: fr-east-1-public
-         - port-name: "R1-lan-1"
+         - port-name: "gw-lan-1"
        auto_ip: no
        boot_from_volume: yes
        terminate_volume: no
@@ -128,4 +172,45 @@
          - "WL-infogerance-hopla"
          - "WL-{{ username }}"
        meta: "router=routeros"
-  when: lan_present|bool == true
+  when: (lan1|bool == true) and (router == routeros) and (lan2|bool == false)
+
+- name: Create RouterOS instance Lan1 and Lan2
+  os_server:
+       auth: "{{ os_auth }}"
+       name: "R1"
+       image: Mikrotik-RouterOS-6.43.16-LTS-x86_64
+       key_name: "{{ username }}"
+       timeout: 200
+       flavor: std.1
+       nics:
+         - net-name: fr-east-1-public
+         - port-name: "gw-lan-1"
+         - port-name: "gw-lan-2"
+       auto_ip: no
+       boot_from_volume: yes
+       terminate_volume: no
+       security_groups:
+         - "WL-infogerance-hopla"
+         - "WL-{{ username }}"
+       meta: "router=routeros"
+  when: (lan1|bool == true) and (router == routeros) and (lan2|bool == true)
+
+- name: Create VR for Lan1 only
+  os_router:
+    auth: "{{ os_auth }}"
+    name: "VR1"
+    network: "fr-east-1-public"
+    enable_snat: yes
+    interfaces: "gw-lan-1"
+  when: (lan1|bool == true) and (router == vr) and (lan2|bool == false)
+
+- name: Create VR for Lan1 and Lan2
+  os_router:
+    auth: "{{ os_auth }}"
+    name: "VR1"
+    network: "fr-east-1-public"
+    enable_snat: yes
+    interfaces:
+      - "gw-lan-1"
+      - "gw-lan-2"
+  when: (lan1|bool == true) and (router == vr) and (lan2|bool == true)
