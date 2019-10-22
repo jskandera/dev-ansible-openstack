@@ -44,14 +44,14 @@
     auth: "{{ os_auth }}"
     name: "WL-{{ username }}"
     description: Whitelist de vos IP
-  when: (user_ip is defined) and (user_ip |length < 4)
+  when: (ip_user is defined) and (ip_user |length < 4)
 
 - os_security_group_rule:
     auth: "{{ os_auth }}"
     security_group: "WL-{{ username }}"
     remote_ip_prefix: "{{ item }}"
   with_items: "{{ ip_user }}"
-  when: (user_ip is defined) and (user_ip |length < 4)
+  when: (ip_user is defined) and (ip_user |length < 4)
 
 - os_security_group_rule:
     auth: "{{ os_auth }}"
