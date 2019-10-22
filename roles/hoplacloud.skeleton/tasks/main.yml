@@ -124,6 +124,8 @@
        auto_ip: no
        boot_from_volume: yes
        terminate_volume: no
-       security_groups: "WL-infogerance-hopla, WL-{{ username }}"
+       security_groups:
+         - "WL-infogerance-hopla"
+         - "WL-{{ username }}"
        meta: "router=routeros"
   when: lan_present|bool == true
