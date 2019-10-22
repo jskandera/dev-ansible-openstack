@@ -201,9 +201,7 @@
     name: "VR1"
     network: "fr-east-1-public"
     interfaces:
-      - net: "Lan1"
-        subnet: "Lan-1"
-        portip: 10.15.30.254
+      - subnet: "Lan-1"
   when: (lan1|bool == true) and (router == "vr") and (lan2|bool == false)
 
 - name: Create VR for Lan1 and Lan2
@@ -212,10 +210,6 @@
     name: "VR1"
     network: "fr-east-1-public"
     interfaces:
-      - net: "Lan1"
-        subnet: "Lan-1"
-        portip: 10.15.30.254
-      - net: "Lan2"
-        subnet: "Lan-2"
-        portip: 10.15.31.254
+      - subnet: "Lan-1"
+      - subnet: "Lan-2"
   when: (lan1|bool == true) and (router == "vr") and (lan2|bool == true)
