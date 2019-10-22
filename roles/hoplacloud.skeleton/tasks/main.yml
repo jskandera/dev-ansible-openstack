@@ -27,7 +27,7 @@
 - name: Create subnet 1
   os_subnet:
     auth: "{{ os_auth }}"
-    network_name: "Lan"
+    network_name: "Lan1"
     name: "Lan-1"
     cidr: 10.15.30.0/24
     dns_nameservers:
@@ -39,7 +39,7 @@
 - name: Create subnet 2
   os_subnet:
     auth: "{{ os_auth }}"
-    network_name: "Lan"
+    network_name: "Lan2"
     name: "Lan-2"
     cidr: 10.15.31.0/24
     dns_nameservers:
