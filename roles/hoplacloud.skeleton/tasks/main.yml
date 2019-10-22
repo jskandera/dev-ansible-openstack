@@ -143,8 +143,7 @@
        fixed_ips:
          - ip_address: 10.15.30.254
   when: (lan1|bool == true) and (router == "routeros")
-  register: port-lan-1.id
-  
+
 - name: Create a port (router lan2 interface)
   os_port:
        auth: "{{ os_auth }}"
@@ -154,7 +153,6 @@
        fixed_ips:
          - ip_address: 10.15.31.254
   when: (lan2|bool == true) and (router == "routeros")
-  register: port-lan-2.id
 
 - name: Create RouterOS instance Lan1 only
   os_server:
@@ -187,7 +185,7 @@
        nics:
          - net-name : "fr-east-1-public"
          - port-name: "gw-lan-1"
-         - port-id: "{{ port-lan-2.id }}"
+         - port-name: "gw-lan-2"
        auto_ip: no
        boot_from_volume: yes
        terminate_volume: no
