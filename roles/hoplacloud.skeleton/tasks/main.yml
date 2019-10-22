@@ -44,14 +44,14 @@
     auth: "{{ os_auth }}"
     name: "WL-{{ username }}"
     description: Whitelist de vos IP
-  when: (ip_user is defined) and (ip_user |length < 4)
+  when: (ip_user is defined) and (ip_user |length > 4)
 
 - os_security_group_rule:
     auth: "{{ os_auth }}"
     security_group: "WL-{{ username }}"
     remote_ip_prefix: "{{ item }}"
   with_items: "{{ ip_user }}"
-  when: (ip_user is defined) and (ip_user |length < 4)
+  when: (ip_user is defined) and (ip_user |length > 4)
 
 - os_security_group_rule:
     auth: "{{ os_auth }}"
@@ -69,7 +69,7 @@
     auth: "{{ os_auth }}"
     name: "{{ username }}"
     public_key: "{{ public_key }}"
-  when: (public_key is defined) and (public_key |length < 4)
+  when: (public_key is defined) and (public_key |length > 4)
 
 - name: Create a port router gateway
   os_port:
