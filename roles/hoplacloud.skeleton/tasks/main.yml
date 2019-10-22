@@ -142,7 +142,7 @@
        security_groups: "WL-Lan-1"
        fixed_ips:
          - ip_address: 10.15.30.254
-  when: (lan1|bool == true) and (router != "false")
+  when: (lan1|bool == true) and (router == "routeros")
 
 - name: Create a port (router lan2 interface)
   os_port:
@@ -152,7 +152,7 @@
        security_groups: "WL-Lan-2"
        fixed_ips:
          - ip_address: 10.15.31.254
-  when: (lan2|bool == true) and (router != "false")
+  when: (lan2|bool == true) and (router == "routeros")
 
 - name: Create RouterOS instance Lan1 only
   os_server:
