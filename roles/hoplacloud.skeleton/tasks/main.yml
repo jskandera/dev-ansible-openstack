@@ -14,7 +14,7 @@
     auth: "{{ os_auth }}"
     name: "Lan"
     port_security_enabled: yes
-  when: lan_present
+  when: lan_present == true
 
 - os_subnet:
     auth: "{{ os_auth }}"
@@ -27,7 +27,7 @@
     host_routes:
        - destination: 0.0.0.0/0
          nexthop: 10.15.30.254
-  when: lan_present
+  when: lan_present == true
 
 - os_security_group:
     auth: "{{ os_auth }}"
@@ -38,7 +38,7 @@
     auth: "{{ os_auth }}"
     name: "WL-Lan-1"
     description: Lan-1 acces
-  when: lan_present
+  when: lan_present == true
 
 - os_security_group:
     auth: "{{ os_auth }}"
@@ -57,7 +57,7 @@
     auth: "{{ os_auth }}"
     security_group: "WL-Lan-1"
     remote_ip_prefix: 10.15.30.0/24
-  when: lan_present
+  when: lan_present == true
 
 - os_security_group_rule:
     auth: "{{ os_auth }}"
@@ -78,7 +78,7 @@
        network: "Lan-1"
        fixed_ips:
          - ip_address: 10.15.30.254
-  when: lan_present
+  when: lan_present == true
 
 - name: Create RouterOS instance
   os_server:
@@ -95,4 +95,4 @@
        boot_from_volume: yes
        terminate_volume: no
        meta: "router=routeros"
-  when: lan_present
+  when: lan_present == true
