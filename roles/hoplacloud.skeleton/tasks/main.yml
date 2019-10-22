@@ -1,0 +1,100 @@
+---
+# tasks file for hoplacloud.skeleton
+---
+# tasks file for hopla.cloud-create-project
+- name: set openstack auth vars
+  set_fact:
+    os_auth:
+      auth_url: "{{ https://fr-east-1.pub.hopla.cloud:13000/v3 }}"
+      username: "{{ api_user }}"
+      password: "{{ api_password }}"
+      project_name: "{{ api_project }}"
+      project_domain_name: "{{ default }}"
+      user_domain_name: "{{ default }}"
+
+- os_network:
+    auth: "{{ os_auth }}"
+    name: "Lan"
+    port_security_enabled: yes
+  when: lan_present
+
+- os_subnet:
+    auth: "{{ os_auth }}"
+    network_name: "Lan"
+    name: "Lan-1"
+    cidr: 10.15.30.0/24
+    dns_nameservers:
+       - 8.8.8.8
+       - 8.8.4.4
+    host_routes:
+       - destination: 0.0.0.0/0
+         nexthop: 10.15.30.254
+  when: lan_present
+
+- os_security_group:
+    auth: "{{ os_auth }}"
+    name: "WL-infogerance-hopla"
+    description: Whitelist des IP utilisées par hopla dans le cadre de votre contrat d'infogérance.
+
+- os_security_group:
+    auth: "{{ os_auth }}"
+    name: "WL-Lan-1"
+    description: Lan-1 acces
+  when: lan_present
+
+- os_security_group:
+    auth: "{{ os_auth }}"
+    name: "WL-{{ username }}"
+    description: Whitelist de vos IP
+  when: (user_ip is defined) and (user_ip |length < 4)
+
+- os_security_group_rule:
+    auth: "{{ os_auth }}"
+    security_group: "WL-{{ username }}"
+    remote_ip_prefix: "{{ item }}"
+  with_items: "{{ ip_user }}"
+  when: (user_ip is defined) and (user_ip |length < 4)
+
+- os_security_group_rule:
+    auth: "{{ os_auth }}"
+    security_group: "WL-Lan-1"
+    remote_ip_prefix: 10.15.30.0/24
+  when: lan_present
+
+- os_security_group_rule:
+    auth: "{{ os_auth }}"
+    security_group: "WL-infogerance-hopla"
+    remote_ip_prefix: "{{ item }}"
+  with_items: "{{ ip_hopla }}"
+
+- os_keypair:
+    auth: "{{ os_auth }}"
+    name: "{{ username }}"
+    public_key: "{{ public_key }}"
+  when: (public_key is defined) and (public_key |length < 4)
+
+- name: Create a port router gateway
+  os_port:
+       auth: "{{ os_auth }}"
+       name: "R1-lan-1"
+       network: "Lan-1"
+       fixed_ips:
+         - ip_address: 10.15.30.254
+  when: lan_present
+
+- name: Create RouterOS instance
+  os_server:
+       auth: "{{ os_auth }}"
+       name: "R1"
+       image: Mikrotik-RouterOS-6.43.16-LTS-x86_64
+       key_name: "{{ username }}"
+       timeout: 200
+       flavor: std.1
+       nics:
+         - net-name: fr-east-1-public
+         - port-name: "R1-lan-1"
+       auto_ip: no
+       boot_from_volume: yes
+       terminate_volume: no
+       meta: "router=routeros"
+  when: lan_present
