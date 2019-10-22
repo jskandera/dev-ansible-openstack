@@ -75,7 +75,7 @@
   os_port:
        auth: "{{ os_auth }}"
        name: "R1-lan-1"
-       network: "Lan-1"
+       network: "Lan"
        fixed_ips:
          - ip_address: 10.15.30.254
   when: lan_present == true
