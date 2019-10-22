@@ -52,18 +52,21 @@
     remote_ip_prefix: "{{ item }}"
   with_items: "{{ ip_user }}"
   when: (ip_user is defined) and (ip_user |length > 4)
+  ignore_errors: true
 
 - os_security_group_rule:
     auth: "{{ os_auth }}"
     security_group: "WL-Lan-1"
     remote_ip_prefix: 10.15.30.0/24
   when: lan_present
-
+  ignore_errors: true
+  
 - os_security_group_rule:
     auth: "{{ os_auth }}"
     security_group: "WL-infogerance-hopla"
     remote_ip_prefix: "{{ item }}"
   with_items: "{{ ip_hopla }}"
+  ignore_errors: true
 
 - os_keypair:
     auth: "{{ os_auth }}"
