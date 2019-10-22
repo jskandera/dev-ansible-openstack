@@ -3,12 +3,12 @@
 - name: set openstack auth vars
   set_fact:
     os_auth:
-      auth_url: "{{ https://fr-east-1.pub.hopla.cloud:13000/v3 }}"
+      auth_url: "https://fr-east-1.pub.hopla.cloud:13000/v3"
       username: "{{ api_user }}"
       password: "{{ api_password }}"
       project_name: "{{ api_project }}"
-      project_domain_name: "{{ default }}"
-      user_domain_name: "{{ default }}"
+      project_domain_name: "default"
+      user_domain_name: "default"
 
 - os_network:
     auth: "{{ os_auth }}"
