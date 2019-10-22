@@ -212,7 +212,6 @@
     auth: "{{ os_auth }}"
     name: "VR1"
     network: "fr-east-1-public"
-    enable_snat: yes
     interfaces:
       - net: "Lan1"
         subnet: "Lan-1"
