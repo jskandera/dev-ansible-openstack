@@ -1,7 +1,5 @@
 ---
 # tasks file for hoplacloud.skeleton
----
-# tasks file for hopla.cloud-create-project
 - name: set openstack auth vars
   set_fact:
     os_auth:
