@@ -3,6 +3,5 @@
   gather_facts: no
   tasks:
      - os_server_facts:
-       server: "R1"
      - debug:
        var: openstack_servers
