@@ -4,4 +4,8 @@
   tasks:
      - os_server_facts:
      - debug:
-         var: openstack_servers.[addresses]
+         var: openstack_servers
+     - name: "Display all cluster names"
+       debug:
+         var: item
+       loop: "{{ openstack_servers | json_query('.addresses[]|.[1].addr') }}"
