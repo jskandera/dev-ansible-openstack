@@ -4,4 +4,4 @@
   tasks:
      - os_server_facts:
      - debug:
-         var: openstack_servers.addresses
+         var: openstack_servers.[addresses]
