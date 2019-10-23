@@ -4,7 +4,7 @@
   tasks:
      - os_server_facts:
      - debug:
-         var: openstack_servers
+         var: openstack_servers.addresses[]|.[1].addr
      - name: "Display all cluster names"
        debug:
          var: item
