@@ -1,32 +1,19 @@
 ---
 # tasks file for hoplacloud.skeleton
-- name: set openstack auth vars
-  set_fact:
-    os_auth:
-      auth_url: "https://fr-east-1.pub.hopla.cloud:13000/v3"
-      username: "{{ api_user }}"
-      password: "{{ api_password }}"
-      project_name: "{{ api_project }}"
-      project_domain_name: "default"
-      user_domain_name: "default"
-
 - name: Create network 1
   os_network:
-    auth: "{{ os_auth }}"
     name: "Lan1"
     port_security_enabled: yes
   when: (lan1|bool == true)
 
 - name: Create network 2
   os_network:
-    auth: "{{ os_auth }}"
     name: "Lan2"
     port_security_enabled: yes
   when: (lan2|bool == true)
 
 - name: Create subnet 1
   os_subnet:
-    auth: "{{ os_auth }}"
     network_name: "Lan1"
     name: "Lan-1"
     cidr: 10.15.30.0/24
@@ -38,7 +25,6 @@
 
 - name: Create subnet 2
   os_subnet:
-    auth: "{{ os_auth }}"
     network_name: "Lan2"
     name: "Lan-2"
     cidr: 10.15.31.0/24
@@ -50,34 +36,29 @@
 
 - name: Create security group "WL-infogerance-hopla"
   os_security_group:
-    auth: "{{ os_auth }}"
     name: "WL-infogerance-hopla"
     description: Whitelist des IP utilisees par hopla dans le cadre de votre contrat d'infogerance.
 
 - name: Create security group "WL-Lan-1"
   os_security_group:
-    auth: "{{ os_auth }}"
     name: "WL-Lan-1"
     description: Lan-1
   when: (lan1|bool == true)
 
 - name: Create security group "WL-Lan-2"
   os_security_group:
-    auth: "{{ os_auth }}"
     name: "WL-Lan-2"
     description: Lan-1 acces
   when: (lan2|bool == true)
 
 - name: Create security group "WL-{{ username }}"
   os_security_group:
-    auth: "{{ os_auth }}"
     name: "WL-{{ username }}"
     description: Whitelist de vos IP
   when: (ip_user_v4 is defined) and (ip_user_v4 |length > 4)
 
 - name: Create security group rule in "WL-{{ username }}" IPv4
   os_security_group_rule:
-    auth: "{{ os_auth }}"
     security_group: "WL-{{ username }}"
     remote_ip_prefix: "{{ item }}"
   with_items: "{{ ip_user_v4 }}"
@@ -86,7 +67,6 @@
 
 - name: Create security group rule in "WL-{{ username }}" IPv6
   os_security_group_rule:
-    auth: "{{ os_auth }}"
     security_group: "WL-{{ username }}"
     remote_ip_prefix: "{{ item }}"
     ethertype: "IPv6"
@@ -96,7 +76,6 @@
 
 - name: Create security group rule in "WL-Lan-1"
   os_security_group_rule:
-    auth: "{{ os_auth }}"
     security_group: "WL-Lan-1"
     remote_ip_prefix: 10.15.30.0/24
   when: (lan1|bool == true)
@@ -104,7 +83,6 @@
 
 - name: Create security group rule in "WL-Lan-2"
   os_security_group_rule:
-    auth: "{{ os_auth }}"
     security_group: "WL-Lan-2"
     remote_ip_prefix: 10.15.31.0/24
   when: (lan2|bool == true)
@@ -112,7 +90,6 @@
 
 - name: Create security group rule in "WL-infogerance-hopla" IPv4
   os_security_group_rule:
-    auth: "{{ os_auth }}"
     security_group: "WL-infogerance-hopla"
     remote_ip_prefix: "{{ item }}"
   with_items: "{{ ip_hopla_v4 }}"
@@ -120,7 +97,6 @@
 
 - name: Create security group rule in "WL-infogerance-hopla" IPv6
   os_security_group_rule:
-    auth: "{{ os_auth }}"
     security_group: "WL-infogerance-hopla"
     remote_ip_prefix: "{{ item }}"
     ethertype: "IPv6"
@@ -129,14 +105,12 @@
 
 - name: Import public key
   os_keypair:
-    auth: "{{ os_auth }}"
     name: "{{ username }}"
     public_key: "{{ public_key }}"
   when: (public_key is defined) and (public_key |length > 4)
 
 - name: Create a port (router lan1 interface)
   os_port:
-       auth: "{{ os_auth }}"
        name: "gw-lan-1"
        network: "Lan1"
        security_groups: "WL-Lan-1"
@@ -146,7 +120,6 @@
 
 - name: Create a port (router lan2 interface)
   os_port:
-       auth: "{{ os_auth }}"
        name: "gw-lan-2"
        network: "Lan2"
        security_groups: "WL-Lan-2"
@@ -156,7 +129,6 @@
 
 - name: Create RouterOS instance Lan1 only
   os_server:
-       auth: "{{ os_auth }}"
        name: "R1"
        image: Mikrotik-RouterOS-6.43.16-LTS-x86_64
        key_name: "{{ username }}"
@@ -176,7 +148,6 @@
 
 - name: Create RouterOS instance Lan1 and Lan2
   os_server:
-       auth: "{{ os_auth }}"
        name: "R1"
        image: Mikrotik-RouterOS-6.43.16-LTS-x86_64
        key_name: "{{ username }}"
@@ -197,7 +168,6 @@
 
 - name: Create VR for Lan1 only
   os_router:
-    auth: "{{ os_auth }}"
     name: "VR1"
     network: "fr-east-1-public"
     interfaces:
@@ -206,7 +176,6 @@
 
 - name: Create VR for Lan1 and Lan2
   os_router:
-    auth: "{{ os_auth }}"
     name: "VR1"
     network: "fr-east-1-public"
     interfaces:
