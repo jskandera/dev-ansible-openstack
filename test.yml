@@ -6,6 +6,6 @@
     ansible_user: admin
     ansible_password:
   tasks:
-- name: Display resource statistics (routeros)
-  routeros_command:
-    commands: /system resource print
+    - name: Display resource statistics (routeros)
+      routeros_command:
+        commands: /system resource print
