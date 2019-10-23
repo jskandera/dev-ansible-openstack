@@ -2,15 +2,5 @@
 - hosts: localhost
   gather_facts: no
   tasks:
-     - set_fact:     
-         os_auth:
-           auth_url: "{{ auth.auth_url }}"
-           username: "{{ auth.username }}"
-           password: "{{ auth.password }}"
-           project_name: "{{ auth.project_name }}"
-           project_domain_name: "{{ auth.project_domain_name }}"
-           user_domain_name: "{{ auth.user_domain_name }}"
-
      - os_auth:
          auth: "{{ os_auth }}"
-
