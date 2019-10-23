@@ -10,6 +10,7 @@
           mikrotik_ipv4: "{{ mikrotik_ipv4 | join('\n') }}"
           mikrotik_ipv6: "{{ mikrotik_ipv6 | join('\n') }}"
 - hosts: R1
+  gather_facts: no
   vars:
     ansible_connection: network_cli
     ansible_network_os: routeros
