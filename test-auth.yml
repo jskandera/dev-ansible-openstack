@@ -3,4 +3,3 @@
   gather_facts: no
   tasks:
      - os_auth:
-         auth: "{{ os_auth }}"
