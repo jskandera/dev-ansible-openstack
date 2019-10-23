@@ -3,9 +3,17 @@
   gather_facts: no
   tasks:
      - os_server_facts:
-     - debug:
-         var: openstack_servers
-     - name: "Display all cluster names"
-       debug:
-         var: item
-       loop: "{{ openstack_servers | json_query('addresses[]|.[1].addr') }}"
+     - set_fact:
+          mikrotik_ipv4: "{{ openstack_servers | json_query('[].public_v4') }}"
+          mikrotik_ipv6: "{{ openstack_servers | json_query('[].public_v6') }}"
+     - set_fact:
+          mikrotik_ipv4: "{{ mikrotik_ipv4 | join('\n') }}"
+          mikrotik_ipv6: "{{ mikrotik_ipv6 | join('\n') }}"
+- hosts: R1
+  vars:
+    ansible_connection: network_cli
+    ansible_network_os: routeros
+  tasks:
+     - name: Display resource statistics (routeros)
+       routeros_command:
+         commands: /system resource print
