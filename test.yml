@@ -6,10 +6,10 @@
     ansible_user: admin
     ansible_password:
   tasks:
-    - os_server_facts:
-      server: R1
-    - debug:
-      var: openstack_servers  
-    - name: Display resource statistics (routeros)
-      routeros_command:
-        commands: /system resource print
+  - os_server_facts:
+    server: "R1"
+  - debug:
+    var: openstack_servers
+  - name: Display resource statistics (routeros)
+    routeros_command:
+      commands: /system resource print
