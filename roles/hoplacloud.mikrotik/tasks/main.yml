@@ -68,6 +68,10 @@
      commands: /ip address add address=10.15.31.254/24 interface=ether3
    when: (lan2|bool == true)
 
+ - name: Configure NAT
+   routeros_command:
+     commands: /ip firewall nat add action=masquerade chain=srcnat out-interface=ether1
+
  - name: Set Log to disk
    routeros_command:
      commands: /system logging add action=disk topics=critical
@@ -87,6 +91,10 @@
  - name: Set Lograte
    routeros_command:
      commands: /system logging action set 1 disk-file-count=20
+
+ - name: Set Lograte
+   routeros_command:
+     commands: /user set 0 password="{{mikrotik_password}}"
 
  - name: Install udpate
    routeros_command:
