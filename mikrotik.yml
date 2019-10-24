@@ -43,6 +43,7 @@
      - set_fact:
           gw_ipv4: "{{ hostvars['localhost']['gw_ipv4'] }}"
           mikrotik_ipv4: "{{ hostvars['localhost']['mikrotik_ipv4'] }}"
-
+          gw_ipv6: "{{ hostvars['localhost']['gw_ipv6'] }}"
+          mikrotik_ipv6: "{{ hostvars['localhost']['mikrotik_ipv6'] }}"
   roles:
     - hoplacloud.mikrotik
