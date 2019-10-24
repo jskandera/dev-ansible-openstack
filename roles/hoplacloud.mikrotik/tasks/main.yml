@@ -2,7 +2,7 @@
 # tasks file for hoplacloud.mikrotik
  - name:
    routeros_command:
-     commands: /ip route add distance=1 gateway="{{ wan_ipv4 }}"
+     commands: /ip route add distance=1 gateway="{{ gw_ipv4 }}"
 
  - name:
    routeros_command:
