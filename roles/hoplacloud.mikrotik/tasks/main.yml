@@ -1,12 +1,14 @@
 ---
 # tasks file for hoplacloud.mikrotik
+ - set_fact:
+   source_script: "{{ /ip route add distance=1 gateway=gw_ipv4\r\ \n/ip address add address= mikrotik_ipv4/24 interface=ether1 }}"
  - name:
    routeros_command:
-     commands: /ip route add distance=1 gateway="{{ gw_ipv4 }}"
+     commands: /system script add dont-require-permissions=yes name=conf-ip owner=admin policy=ftp,reboot,read,write,policy,test,password,sniff,sensitive,romon source=\""{{source_script}}"\"
 
  - name:
    routeros_command:
-     commands: /ip address add address="{{ mikrotik_ipv4 }}"/24 interface=ether1
+     commands: /system schedule add name=Config-ip on-event="/system script run conf-ip" start-time=startup interval=0
 
  - name: Disable dhcp package
    routeros_command:
