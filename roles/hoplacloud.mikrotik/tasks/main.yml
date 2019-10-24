@@ -1,7 +1,7 @@
 ---
 # tasks file for hoplacloud.mikrotik
  - set_fact:
-      source_script: "/ip address add address={{mikrotik_ipv4}}/24 interface=ether1\\r\\ \\n/ip route add distance=1 gateway={{gw_ipv4}}\\r\\ \\n/ipv6 address add address={{mikrotik_ipv6}}/64 interface=ether1\\r\\ \\n/ipv6 route add distance=1 gateway={{gw_ipv6}}"
+      source_script: ":delay 15\\r\\ \\n/ip address add address={{mikrotik_ipv4}}/24 interface=ether1\\r\\ \\n/ip route add distance=1 gateway={{gw_ipv4}}\\r\\ \\n/ipv6 address add address={{mikrotik_ipv6}}/64 interface=ether1\\r\\ \\n/ipv6 route add distance=1 gateway={{gw_ipv6}}"
 
  - name:
    routeros_command:
