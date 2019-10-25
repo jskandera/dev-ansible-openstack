@@ -105,7 +105,7 @@
 
 - name: Import public key
   os_keypair:
-    name: "{{ username }}"
+    name: "{{ username }}-infogerance"
     public_key: "{{ public_key }}"
   when: (public_key is defined) and (public_key |length > 4)
 
