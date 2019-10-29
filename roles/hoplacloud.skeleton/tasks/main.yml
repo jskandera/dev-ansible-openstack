@@ -18,8 +18,8 @@
     name: "Lan-1"
     cidr: 10.15.30.0/24
     dns_nameservers:
-       - 8.8.8.8
-       - 8.8.4.4
+       - 208.67.222.222
+       - 208.67.220.220
     gateway_ip: "10.15.30.254"
   when: (lan1|bool == true)
 
@@ -29,8 +29,8 @@
     name: "Lan-2"
     cidr: 10.15.31.0/24
     dns_nameservers:
-       - 8.8.8.8
-       - 8.8.4.4
+       - 208.67.222.222
+       - 208.67.220.220
     gateway_ip: "10.15.31.254"
   when: (lan2|bool == true)
 
@@ -129,8 +129,8 @@
 
 - name: Create RouterOS instance Lan1 only
   os_server:
-       name: "R1"
-       image: Mikrotik-RouterOS-6.43.16-LTS-x86_64
+       name: "{{ username }}R1"
+       image: a22ff3d8-1cb6-4c8e-b205-280c2c957dd3
        key_name: "{{ username }}"
        timeout: 200
        flavor: std.1
@@ -148,8 +148,8 @@
 
 - name: Create RouterOS instance Lan1 and Lan2
   os_server:
-       name: "R1"
-       image: Mikrotik-RouterOS-6.43.16-LTS-x86_64
+       name: "{{ username }}R1"
+       image: a22ff3d8-1cb6-4c8e-b205-280c2c957dd3
        key_name: "{{ username }}"
        timeout: 200
        flavor: std.1
