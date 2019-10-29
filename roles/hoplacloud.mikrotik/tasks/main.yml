@@ -72,6 +72,10 @@
    routeros_command:
      commands: /ip firewall nat add action=masquerade chain=srcnat out-interface=ether1
 
+ - name: Configure lan1 interface
+   routeros_command:
+     commands: /ip dns set server=208.67.222.222
+
  - name: Set Log to disk
    routeros_command:
      commands: /system logging add action=disk topics=critical
