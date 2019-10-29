@@ -72,7 +72,7 @@
    routeros_command:
      commands: /ip firewall nat add action=masquerade chain=srcnat out-interface=ether1
 
- - name: Configure lan1 interface
+ - name: Configure DNS
    routeros_command:
      commands: /ip dns set server=208.67.222.222
 
@@ -96,7 +96,7 @@
    routeros_command:
      commands: /system logging action set 1 disk-file-count=20
 
- - name: Set Lograte
+ - name: Set admin password
    routeros_command:
      commands: /user set 0 password="{{mikrotik_password}}"
 
