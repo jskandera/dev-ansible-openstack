@@ -131,7 +131,6 @@
   os_server:
        name: "{{ username }}R1"
        image: a22ff3d8-1cb6-4c8e-b205-280c2c957dd3
-       key_name: "{{ username }}"
        timeout: 200
        flavor: std.1
        nics:
@@ -150,7 +149,6 @@
   os_server:
        name: "{{ username }}R1"
        image: a22ff3d8-1cb6-4c8e-b205-280c2c957dd3
-       key_name: "{{ username }}"
        timeout: 200
        flavor: std.1
        nics:
