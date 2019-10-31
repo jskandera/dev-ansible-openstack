@@ -33,7 +33,7 @@
           gw_ipv6: "{{ openstack_subnets | json_query('[].gateway_ip') | join('\n') }}"
           cidr_ipv6: "{{ openstack_subnets | json_query('[].cidr') | join('\n') }}"
 
-- hosts: R1
+- hosts: "{{ username }}R1"
   gather_facts: no
   vars:
     ansible_connection: network_cli
